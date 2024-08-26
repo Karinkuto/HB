@@ -6,7 +6,6 @@ import { Heart, ShoppingCart } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import useProductStore from "@/pages/ProductStore";
 import useCartStore from "@/components/cartStore";
-import useFavoriteStore from "@/components/favoriteStore";
 import Nav from "./Nav";
 
 interface HeaderProps {
@@ -19,7 +18,6 @@ export default function Header({ onLogin, onLogout, isAdmin }: HeaderProps) {
   const { isLoggedIn, setLoginStatus } = useProductStore();
   const navigate = useNavigate();
   const cartItems = useCartStore(state => state.items);
-  const favorites = useFavoriteStore(state => state.favorites);
 
   const handleLoginClick = () => {
     if (isLoggedIn) {
@@ -53,18 +51,7 @@ export default function Header({ onLogin, onLogout, isAdmin }: HeaderProps) {
         <Nav isAdmin={isAdmin} />
         {!isAdmin && (
           <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => navigate('/favorites')}
-              aria-label="Favorites"
-              className="relative"
-            >
-              <Heart className="h-5 w-5" />
-              {favorites.length > 0 && (
-                <Badge className="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 bg-red-500 text-white w-2 h-2 p-0 rounded-full" />
-              )}
-            </Button>
+            
             <Button
               variant="outline"
               size="icon"

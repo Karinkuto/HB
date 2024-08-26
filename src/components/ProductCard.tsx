@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import useCartStore from "../components/cartStore";
 import { Heart } from "lucide-react";
-import useFavoriteStore from "../components/favoriteStore";
 import { useNavigate } from 'react-router-dom';
 
 interface Product {
@@ -21,7 +20,6 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const addToCart = useCartStore(state => state.addToCart);
-  const { addToFavorites, removeFromFavorites, isFavorite } = useFavoriteStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -30,15 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart(product);
   };
 
-  const handleToggleFavorite = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (isFavorite(product.id)) {
-      removeFromFavorites(product.id);
-    } else {
-      addToFavorites(product);
-    }
-  };
-
+  
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
     addToCart(product);
@@ -58,20 +48,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
           <div className="flex justify-between items-center">
             <CardTitle className="line-clamp-1 text-sm">{product.name}</CardTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-0 hover:bg-transparent"
-              onClick={handleToggleFavorite}
-            >
-              <Heart
-                className={`h-5 w-5 transition-colors duration-200 ${
-                  isFavorite(product.id)
-                    ? "fill-red-500 text-red-500"
-                    : "text-gray-500"
-                }`}
-              />
-            </Button>
+            
           </div>
           <CardDescription className="line-clamp-2 text-xs">{product.description}</CardDescription>
         </CardHeader>
