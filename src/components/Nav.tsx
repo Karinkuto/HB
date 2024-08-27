@@ -20,13 +20,16 @@ const Nav = ({ isAdmin }: { isAdmin: boolean }) => {
 const DesktopNav = ({ isAdmin }: { isAdmin: boolean }) => {
   return (
     <nav className="hidden md:flex gap-2">
-      <ButtonLink variant={"ghost"} to="/" activeVariant="secondary">
-        Home
-      </ButtonLink>
-      <ButtonLink variant={"ghost"} to="/products" activeVariant="secondary">
-        Products
-      </ButtonLink>
-      {isAdmin && (
+      {!isAdmin ? (
+        <>
+          <ButtonLink variant={"ghost"} to="/" activeVariant="secondary">
+            Home
+          </ButtonLink>
+          <ButtonLink variant={"ghost"} to="/products" activeVariant="secondary">
+            Products
+          </ButtonLink>
+        </>
+      ) : (
         <>
           <ButtonLink variant={"ghost"} to="/admin" activeVariant="secondary">
             Dashboard
@@ -54,17 +57,20 @@ const MobileNav = ({ isAdmin }: { isAdmin: boolean }) => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Navigation</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <ButtonLink variant={"ghost"} to="/" activeVariant="secondary">
-              Home
-            </ButtonLink>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ButtonLink variant={"ghost"} to="/products" activeVariant="secondary">
-              Products
-            </ButtonLink>
-          </DropdownMenuItem>
-          {isAdmin && (
+          {!isAdmin ? (
+            <>
+              <DropdownMenuItem>
+                <ButtonLink variant={"ghost"} to="/" activeVariant="secondary">
+                  Home
+                </ButtonLink>
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <ButtonLink variant={"ghost"} to="/products" activeVariant="secondary">
+                  Products
+                </ButtonLink>
+              </DropdownMenuItem>
+            </>
+          ) : (
             <>
               <DropdownMenuItem>
                 <ButtonLink variant={"ghost"} to="/admin" activeVariant="secondary">

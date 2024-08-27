@@ -26,6 +26,8 @@ const useProductStore = create(
       setFilter: (filter) => set({ filter }),
       setSortBy: (sortBy) => set({ sortBy }),
       setSearchTerm: (searchTerm) => set({ searchTerm }),
+      isLoggedIn: false,
+      setLoginStatus: (status) => set({ isLoggedIn: status }),
       // ... other actions
     }),
     {

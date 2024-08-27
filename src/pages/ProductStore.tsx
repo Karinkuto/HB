@@ -59,9 +59,14 @@ interface ProductState {
   clearInvalidReviews: () => void;
 }
 
+const getCurrentUser = () => {
+  const userString = localStorage.getItem('currentUser');
+  return userString ? JSON.parse(userString) : null;
+};
+
 const useProductStore = create(
   persist<ProductState>(
-    (set) => ({
+    (set, get) => ({
       products: mockProducts,
       filter: 'all',
       sortBy: 'name',
@@ -89,6 +94,7 @@ const useProductStore = create(
           state.products.some(product => product.id === review.productId)
         )
       })),
+      getCurrentUser,
     }),
     {
       name: 'product-store',

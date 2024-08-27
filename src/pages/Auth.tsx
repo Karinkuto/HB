@@ -47,6 +47,10 @@ export default function Auth({ setIsAdmin }: AuthProps) {
   });
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [loginMessage, setLoginMessage] = useState<string>("");
+
+  const navigate = useNavigate();
+  const { users, addUser, setLoginStatus } = useProductStore();
 
   // Handle input change
   const handleChange = (e: ChangeEvent<HTMLInputElement>): void => {
@@ -127,28 +131,27 @@ export default function Auth({ setIsAdmin }: AuthProps) {
     }
   };
 
-  const navigate = useNavigate();
-  const { users, addUser, setCurrentUser, setLoginStatus } = useProductStore();
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.username === 'admin' && formData.password === 'admin') {
       console.log('Admin login successful');
       localStorage.setItem('isAdmin', 'true');
+      localStorage.setItem('isLoggedIn', 'true');
       setIsAdmin(true);
       setLoginStatus(true);
-      // Use a callback to ensure state is updated before navigation
-      setTimeout(() => {
-        navigate('/admin');
-      }, 0);
+      setLoginMessage("Admin login successful. Redirecting...");
+      setTimeout(() => navigate('/admin'), 1500);
     } else {
       const user = users.find(u => u.username === formData.username && u.password === formData.password);
       if (user) {
-        setCurrentUser(user);
+        console.log('User login successful');
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('currentUser', JSON.stringify(user));
         setLoginStatus(true);
-        navigate('/');
+        setLoginMessage("Login successful. Redirecting...");
+        setTimeout(() => navigate('/'), 1500);
       } else {
-        alert('Invalid credentials');
+        setLoginMessage('Invalid credentials');
       }
     }
   };
@@ -184,6 +187,7 @@ export default function Auth({ setIsAdmin }: AuthProps) {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        height: "100vh",
       }}
     >
       <Tabs defaultValue="login" className="w-[350px]">
@@ -223,6 +227,11 @@ export default function Auth({ setIsAdmin }: AuthProps) {
                     required
                   />
                 </div>
+                {loginMessage && (
+                  <div className={`text-center ${loginMessage.includes('successful') ? 'text-green-500' : 'text-red-500'}`}>
+                    {loginMessage}
+                  </div>
+                )}
               </CardContent>
               <CardFooter>
                 <Button type="submit" className="w-full">

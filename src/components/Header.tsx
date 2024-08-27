@@ -2,29 +2,38 @@ import { ButtonLink } from "./ui/button-link";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Heart, ShoppingCart } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
 import useProductStore from "@/pages/ProductStore";
 import useCartStore from "@/components/cartStore";
 import Nav from "./Nav";
+import { useEffect, useState } from "react";
 
 interface HeaderProps {
-  onLogin: () => void;
   onLogout: () => void;
   isAdmin: boolean;
 }
 
-export default function Header({ onLogin, onLogout, isAdmin }: HeaderProps) {
-  const { isLoggedIn, setLoginStatus } = useProductStore();
+export default function Header({ onLogout, isAdmin }: HeaderProps) {
+  const { setLoginStatus } = useProductStore();
   const navigate = useNavigate();
   const cartItems = useCartStore(state => state.items);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const loggedInStatus = localStorage.getItem('isLoggedIn') === 'true';
+    setIsLoggedIn(loggedInStatus);
+  }, []);
 
   const handleLoginClick = () => {
     if (isLoggedIn) {
       onLogout();
       setLoginStatus(false);
+      setIsLoggedIn(false);
+      localStorage.setItem('isLoggedIn', 'false'); // Change this line
+      localStorage.removeItem('isAdmin');
+      navigate('/');
     } else {
-      onLogin();
       navigate('/auth');
     }
   };
@@ -38,6 +47,7 @@ export default function Header({ onLogin, onLogout, isAdmin }: HeaderProps) {
         </div>
         <div className="flex gap-2 items-center">
           <ButtonLink 
+            key={isLoggedIn ? 'logout' : 'login'}
             variant={"default"} 
             to={isLoggedIn ? "/" : "/auth"} 
             onClick={handleLoginClick}
